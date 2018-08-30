@@ -1,107 +1,104 @@
-var mongoose = require('mongoose');
-var ActModel = mongoose.model('Activies');
+const mongoose = require('mongoose');
 
+const ActModel = mongoose.model('Activies');
 
 
 module.exports = {
-    /**
+  /**
      *  保存
      */
-    saveOrUpdate: function(data, callback) {
-        
-        if(!data._id) { //保存
-            data.order = 1;
-            var entity = new ActModel(data);
-            entity.save(function(err) {
-
-                if (err != null) {
-                    callback({
-                        code: 1,
-                        msg: err
-                    });
-                    console.log(err);
-                }
-                
-                // 根据拿到的id，viewpath更新入库
-                var viewpath = 'projects/' + entity._id + '/view.html';
-                data.viewpath = viewpath;
-                ActModel.update({ _id: entity._id}, data, function(err, num) {
-                    callback && callback({
-                        code: 0,
-                        id: entity._id
-                    });
-                });
-
-            });
-        } else {
-            var id = data._id;
-            delete data._id;
-            data.viewpath = 'projects/' + id + '/view.html';
-            ActModel.update({ _id: id }, data, function(err, num) {
-                if (err != null) {
-                    console.log(err);
-                    callback({
-                        code: 1,
-                        msg: err
-                    });
-                }
-                callback({
-                    code: 0,
-                    id: id
-                });
-            });
+  saveOrUpdate(data, callback) {
+    if (!data._id) { // 保存
+      data.order = 1;
+      const entity = new ActModel(data);
+      entity.save((err) => {
+        if (err != null) {
+          callback({
+            code: 1,
+            msg: err,
+          });
+          console.log(err);
         }
 
-    },
-    /**
+        // 根据拿到的id，viewpath更新入库
+        const viewpath = `projects/${entity._id}/view.html`;
+        data.viewpath = viewpath;
+        ActModel.update({ _id: entity._id }, data, () => {
+          if (callback) {
+            callback({
+              code: 0,
+              id: entity._id,
+            });
+          }
+        });
+      });
+    } else {
+      const id = data._id;
+      delete data._id;
+      data.viewpath = `projects/${id}/view.html`;
+      ActModel.update({ _id: id }, data, (err) => {
+        if (err != null) {
+          console.log(err);
+          callback({
+            code: 1,
+            msg: err,
+          });
+        }
+        callback({
+          code: 0,
+          id,
+        });
+      });
+    }
+  },
+  /**
      *  根据id查询
      */
-    findById: function(id, callback) {
-        ActModel.findOne({ _id: id }).exec(function(err, model) {
-            callback(model);
-        });
-    },
-    /**
+  findById(id, callback) {
+    ActModel.findOne({ _id: id }).exec((err, model) => {
+      callback(model);
+    });
+  },
+  /**
      *  查询列表
      */
-    findList: function(callback) {
-        var query = ActModel.find().sort({ order:'desc', _id: 'desc' }).select({
-            _id: 1,
-            name: 1,
-            author: 1,
-            discript: 1,
-            cover: 1,
-            viewpath: 1
-        });
-        query.exec(function(err, data) {
-            callback(data);
-        });
-    },
+  findList(callback) {
+    const query = ActModel.find().sort({ order: 'desc', _id: 'desc' }).select({
+      _id: 1,
+      name: 1,
+      author: 1,
+      discript: 1,
+      cover: 1,
+      viewpath: 1,
+    });
+    query.exec((err, data) => {
+      callback(data);
+    });
+  },
 
-    /**
+  /**
      *  delete by id
      */
-    deleteById: function(id, callback) {
-
-        if(id != null && id != '') {
-            ActModel.remove({ _id: id }, function(err) {
-                if (err != null) {
-                    callback({
-                        code: '111111',
-                        msg: err
-                    });
-                    console.log(err);
-                } else {
-                    callback({
-                        code: '000000'
-                    });
-                }
-            });
+  deleteById(id, callback) {
+    if (id !== null && id !== '') {
+      ActModel.remove({ _id: id }, (err) => {
+        if (err != null) {
+          callback({
+            code: '111111',
+            msg: err,
+          });
+          console.log(err);
         } else {
-            callback({
-                code: '111111',
-                msg: 'id不能为空'
-            });
+          callback({
+            code: '000000',
+          });
         }
+      });
+    } else {
+      callback({
+        code: '111111',
+        msg: 'id不能为空',
+      });
     }
-}
+  },
+};
