@@ -6,67 +6,56 @@
  */
 
 // 定义可用变量
-var path = require('path');
-var fs = require('fs');
-var os = require('os');
-var stat = fs.stat;
-var query = require('querystring');
-var exec = require('child_process').exec;
-
-
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+const query = require('querystring');
 
 /* 读取目录下所有文件
  * @param root 根目录
  * @param reg 文件正则匹配
  */
-function getAllFiles(root, reg) {
-    var res = [];
+exports.getAllFiles = function getAllFiles(root, reg) {
+  let res = [];
 
-    var files = fs.readdirSync(root);
-    files.forEach(function(file) {
-        var pathname = root + '/' + file;
-        var stat = fs.lstatSync(pathname);
+  const files = fs.readdirSync(root);
+  files.forEach((file) => {
+    const pathname = `${root}/${file}`;
+    const stat = fs.lstatSync(pathname);
 
-        if (!stat.isDirectory()) {
-            var fitlPath = path.resolve(root, file).replace(/\\/g, '/');
-            if (reg == null || reg.test(fitlPath)) {
-                res.push(fitlPath);
-            }
-        } else {
-            res = res.concat(getAllFiles(pathname, reg));
-        }
-    });
+    if (!stat.isDirectory()) {
+      const fitlPath = path.resolve(root, file).replace(/\\/g, '/');
+      if (reg === null || reg.test(fitlPath)) {
+        res.push(fitlPath);
+      }
+    } else {
+      res = res.concat(getAllFiles(pathname, reg));
+    }
+  });
 
-    // console.log(res);
-    return res;
+  return res;
 };
-
-exports.getAllFiles = getAllFiles;
 
 /**
  * 获取 root 下所有目录
  * @param root 目录
  */
-function getDirs(root) {
-    var result = [];
+exports.getDirs = function getDirs(root) {
+  const result = [];
 
-    if (root) {
-        var files = fs.readdirSync(root);
-        files.forEach(function(file) {
-            var pathname = root + '/' + file;
-            var stat = fs.lstatSync(pathname);
+  if (root) {
+    const files = fs.readdirSync(root);
+    files.forEach((file) => {
+      const pathname = `${root}/${file}`;
+      const stat = fs.lstatSync(pathname);
 
-            if (stat.isDirectory()) {
-                result.push(pathname);
-            }
-        });
-    }
+      if (stat.isDirectory()) {
+        result.push(pathname);
+      }
+    });
+  }
 
-    return result;
-};
-
-exports.getDirs = function(root) {
-    return getDirs(root);
+  return result;
 };
 
 
@@ -75,58 +64,78 @@ exports.getDirs = function(root) {
  * @param content 文件内容
  */
 function createFile(root, content) {
-    var pathArr = root.split('/');
-    var dirPath = pathArr.slice(0, pathArr.length);
-    var fileName = pathArr.slice(pathArr.length);
-    for (var i = 0; i < dirPath.length; i++) {
-        var p = path.resolve(dirPath.slice(0, i).join('/'));
-        if (dirPath[i] && !fs.existsSync(p)) {
-            fs.mkdirSync(p, '0777');
-        }
+  const pathArr = root.split('/');
+  const dirPath = pathArr.slice(0, pathArr.length);
+  for (let i = 0; i < dirPath.length; i += 1) {
+    const p = path.resolve(dirPath.slice(0, i).join('/'));
+    if (dirPath[i] && !fs.existsSync(p)) {
+      fs.mkdirSync(p, '0777');
     }
-    fs.writeFileSync(path.resolve(root), content, {});
-};
+  }
+  fs.writeFileSync(path.resolve(root), content, {});
+}
 
 exports.createFile = createFile;
 
 // 获取 ip 地址
 function getIp() {
-    var ip = '127.0.0.1';
+  const defaultIp = '127.0.0.1';
 
-    try {
-        var network = require('os').networkInterfaces();
-        var iplist = network.en0;
+  try {
+    const network = os.networkInterfaces();
+    let iplist = network.en0;
 
-        if (iplist == null) {
-            for (var key in network) {
-                iplist = network[key];
-                break;
-            }
-
-            if (iplist == null) {
-                return ip;
-            }
-        }
-
-        if (iplist.length == 1) {
-            return iplist[0].address;
-        } else {
-            for (var key in iplist) {
-                var ipModel = iplist[key];
-                if (ipModel.family == 'IPv4') {
-                    return ipModel.address;
-                }
-            }
-        }
-
-    } catch (e) {
-        console.log(e.message);
+    if (iplist === null) {
+      const key = Object.keys(network).find(k => network[k]);
+      if (key !== undefined) {
+        iplist = network[key];
+      } else {
+        return defaultIp;
+      }
     }
 
-    return ip;
-};
+    if (iplist.length === 1) {
+      return iplist[0].address;
+    }
+
+    const key = Object.keys(iplist).find(k => iplist[k].family === 'IPv4');
+    if (key !== undefined) {
+      iplist = iplist[key].address;
+    } else {
+      return defaultIp;
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+
+  return defaultIp;
+}
 
 exports.getIp = getIp;
+
+// 在复制目录前需要判断该目录是否存在，不存在需要先创建目录
+function exists(src, dst, callback) {
+  fs.exists(dst, (exist) => {
+    if (exist) {
+      callback(src, dst);
+    } else {
+      fs.mkdir(dst, () => {
+        callback(src, dst);
+      });
+    }
+  });
+}
+
+exports.exists = exists;
+
+// 文件或者目录是否存在
+exports.isExists = function isExists(src, callback) {
+  fs.exists(src, (exist) => {
+    if (callback) {
+      callback(exist);
+    }
+  });
+};
 
 
 /*
@@ -134,102 +143,70 @@ exports.getIp = getIp;
  * @param{ String } 需要复制的目录
  * @param{ String } 复制到指定的目录
  */
-function copy(src, dst) {
-    // 读取目录中的所有文件/目录
-    fs.readdir(src, function(err, paths) {
-        if (err) {
-            throw err;
+exports.copy = function copy(src, dst) {
+  // 读取目录中的所有文件/目录
+  fs.readdir(src, (err, paths) => {
+    if (err) {
+      throw err;
+    }
+
+    paths.forEach((folder) => {
+      const _src = `${src}/${folder}`;
+
+
+      const _dst = `${dst}/${folder}`;
+
+
+      let readable;
+
+
+      let writable;
+
+      fs.stat(_src, (statErr, st) => {
+        if (statErr) {
+          throw statErr;
         }
 
-        paths.forEach(function(path) {
-            var _src = src + '/' + path,
-                _dst = dst + '/' + path,
-                readable, writable;
-
-            stat(_src, function(err, st) {
-                if (err) {
-                    throw err;
-                }
-
-                // 判断是否为文件
-                if (st.isFile()) {
-                    // 创建读取流
-                    readable = fs.createReadStream(_src);
-                    // 创建写入流
-                    writable = fs.createWriteStream(_dst);
-                    // 通过管道来传输流
-                    readable.pipe(writable);
-                }
-                // 如果是目录则递归调用自身
-                else if (st.isDirectory()) {
-                    exists(_src, _dst, copy);
-                }
-            });
-        });
-    });
-};
-
-exports.copy = function(src, dst) {
-    copy(src, dst);
-};
-
-// 在复制目录前需要判断该目录是否存在，不存在需要先创建目录
-function exists(src, dst, callback) {
-    fs.exists(dst, function(exists) {
-        if (exists) {
-            callback(src, dst);
-        } else {
-            fs.mkdir(dst, function() {
-                callback(src, dst);
-            });
+        // 判断是否为文件
+        if (st.isFile()) {
+          // 创建读取流
+          readable = fs.createReadStream(_src);
+          // 创建写入流
+          writable = fs.createWriteStream(_dst);
+          // 通过管道来传输流
+          readable.pipe(writable);
+        } else if (st.isDirectory()) {
+          // 如果是目录则递归调用自身
+          exists(_src, _dst, copy);
         }
+      });
     });
-};
-
-exports.exists = function(src, dst, callback) {
-    exists(src, dst, callback);
-};
-
-// 文件或者目录是否存在
-function isExists(src, callback) {
-    fs.exists(src, function(exists) {
-        if (callback) {
-            callback(exists);
-        }
-    });
-};
-
-exports.isExists = function(src, callback) {
-    return isExists(src, callback);
+  });
 };
 
 // 拷贝多个文件
-exports.copyFile = function(src, dst) {;
-    createFile(dst, fs.readFileSync(src), {});
+exports.copyFile = function copyFile(src, dst) {
+  createFile(dst, fs.readFileSync(src), {});
 };
 
 // 创建目录
-function createExists(src) {
-    fs.mkdirSync(src);
-};
-
-exports.createExists = function(src) {
-    createExists(src);
+exports.createExists = function createExists(src) {
+  fs.mkdirSync(src);
 };
 
 // 重新命名
-exports.rename = function(oldPath, newPath) {
-    fs.renameSync(oldPath, newPath)
+exports.rename = function rename(oldPath, newPath) {
+  fs.renameSync(oldPath, newPath);
 };
 
 // 操作系统
-exports.getSystem = function() {
-    return os.homedir().indexOf('/') == 0 ? 'mac' : 'window';
+exports.getSystem = function getSystem() {
+  return os.homedir().indexOf('/') === 0 ? 'mac' : 'window';
 };
 
 // nunjuck 模板前缀
-exports.getNunjuckTemp = function() {
-    return os.homedir().indexOf('/') == 0 ? '' : 'nunjucks!';
+exports.getNunjuckTemp = function getNunjuckTemp() {
+  return os.homedir().indexOf('/') === 0 ? '' : 'nunjucks!';
 };
 
 /**
@@ -237,18 +214,18 @@ exports.getNunjuckTemp = function() {
  * @param req 请求 request
  * @param callback 回调函数
  */
-exports.getPostData = function(req, callback) {
-    var result = '';
-    req.on('data', function(data) {
-        result += data;
-    });
-    req.on('end', function() {
-        result = result == null || result == '' ? null : query.parse(result);
+exports.getPostData = function getPostData(req, callback) {
+  let result = '';
+  req.on('data', (data) => {
+    result += data;
+  });
+  req.on('end', () => {
+    result = result === null || result === '' ? null : query.parse(result);
 
-        if (callback) {
-            callback(result);
-        }
-    });
+    if (callback) {
+      callback(result);
+    }
+  });
 };
 
 
@@ -258,57 +235,43 @@ exports.getPostData = function(req, callback) {
  *  files: 文件数组
  *  dst: 目的文件目录
  */
-function copyFiles(src, files, dst) {
-    var readable = false;
-    var writable = false;
-    var _src = false;
-    var _dst = false;
-    for (var i = 0; i < files.length; i++) {
-        _src = src + '/' + files[i];
-        _dst = dst + '/' + files[i];
-        // 创建读取流
-        readable = fs.createReadStream(_src);
-        // 创建写入流
-        writable = fs.createWriteStream(_dst);
-        // 通过管道来传输流
-        readable.pipe(writable);
-    }
-}
-
-exports.copyFiles = function(src, files, dst) {
-    copyFiles(src, files, dst);
-}
-
-// exports.removeDir = function(dir, callback) {
-//     exec('rm -rf ' + dir, function(err, out) {
-//         console.log('................remove');
-//         callback && callback();
-//         console.log(out);
-//         err && console.log(err);
-//     });
-// }
-
-function deleteFolderRecursive(path) {
-    var files = [];
-    if (fs.existsSync(path)) {
-        files = fs.readdirSync(path);
-        files.forEach(function(file, index) {
-            var curPath = path + "/" + file;
-            if (fs.statSync(curPath).isDirectory()) { // recurse
-                deleteFolderRecursive(curPath);
-            } else { // delete file
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
-    }
+exports.copyFiles = function copyFiles(src, files, dst) {
+  let readable = false;
+  let writable = false;
+  let _src = false;
+  let _dst = false;
+  for (let i = 0; i < files.length; i += 1) {
+    _src = `${src}/${files[i]}`;
+    _dst = `${dst}/${files[i]}`;
+    // 创建读取流
+    readable = fs.createReadStream(_src);
+    // 创建写入流
+    writable = fs.createWriteStream(_dst);
+    // 通过管道来传输流
+    readable.pipe(writable);
+  }
 };
 
-
-exports.removeFiles = function(path) {
-    files = fs.readdirSync(path);
-    files.forEach(function(file, index) {
-        var curPath = path + "/" + file;
+exports.deleteFolderRecursive = function deleteFolderRecursive(folder) {
+  let files = [];
+  if (fs.existsSync(folder)) {
+    files = fs.readdirSync(folder);
+    files.forEach((file) => {
+      const curPath = `${folder}/${file}`;
+      if (fs.statSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
         fs.unlinkSync(curPath);
+      }
     });
-}
+    fs.rmdirSync(folder);
+  }
+};
+
+exports.removeFiles = function removeFiles(folder) {
+  const files = fs.readdirSync(folder);
+  files.forEach((file) => {
+    const curPath = `${folder}/${file}`;
+    fs.unlinkSync(curPath);
+  });
+};
