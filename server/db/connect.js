@@ -4,7 +4,7 @@ const config = require('./config');
 
 module.exports = function init() {
   // 创建数据库链接
-  mongoose.connect(config.db.conn);
+  mongoose.connect(config.db.conn, { useNewUrlParser: true });
   const db = mongoose.connection;
 
   db.on('error', console.error.bind(console, 'connection error:'));
