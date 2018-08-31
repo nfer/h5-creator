@@ -14,14 +14,6 @@ connect();
 
 const port = 3000;
 process.rootPath = __dirname;
-process.port = port;
-
-const host = {
-  dev: 'http://localhost:3000',
-  prd: 'http://www.facemagic888.com',
-};
-
-process.host = host[env];
 
 const app = express();
 

@@ -94,10 +94,8 @@ module.exports = function route(app) {
      * 查询列表
      */
   app.get('/findList', (req, res) => {
-    const domain = process.host;
     actDao.findList((data) => {
       res.send(parseRes.success({
-        domain,
         editUrl: '/edit',
         deleteUrl: '/delete',
         addUrl: '/add',
@@ -110,11 +108,9 @@ module.exports = function route(app) {
      *  主页
      */
   app.get('/home', (req, res) => {
-    const domain = process.host;
     actDao.findList((data) => {
       res.render('home.html', {
         data,
-        domain,
       });
     });
   });
