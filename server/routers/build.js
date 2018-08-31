@@ -85,7 +85,6 @@ module.exports = function route(app) {
       }
 
       return res.render('edit.html', {
-        slug: 'edit',
         data: dueDataImage(data),
       });
     });
@@ -114,7 +113,6 @@ module.exports = function route(app) {
     const domain = process.host;
     actDao.findList((data) => {
       res.render('home.html', {
-        slug: 'home',
         data,
         domain,
       });
@@ -125,18 +123,14 @@ module.exports = function route(app) {
      *  增加
      */
   app.get('/add', (req, res) => {
-    res.render('edit.html', {
-      slug: 'edit',
-    });
+    res.render('edit.html');
   });
 
   /**
      *  show-h5
      */
   app.get('/show-h5.html', (req, res) => {
-    res.render('show-h5.html', {
-      slug: 'show-h5',
-    });
+    res.render('show-h5.html');
   });
 
   /**
