@@ -3,11 +3,8 @@ const mongoose = require('mongoose');
 const ActModel = mongoose.model('Activies');
 
 module.exports = {
-  /**
-     *  保存
-     */
   saveOrUpdate(data, callback) {
-    if (!data._id) { // 保存
+    if (!data._id) {
       data.order = 1;
       const entity = new ActModel(data);
       entity.save((err) => {
@@ -50,17 +47,13 @@ module.exports = {
       });
     }
   },
-  /**
-     *  根据id查询
-     */
+
   findById(id, callback) {
     ActModel.findOne({ _id: id }).exec((err, model) => {
       callback(model);
     });
   },
-  /**
-     *  查询列表
-     */
+
   findList(callback) {
     const query = ActModel.find().sort({ order: 'desc', _id: 'desc' }).select({
       _id: 1,
@@ -75,9 +68,6 @@ module.exports = {
     });
   },
 
-  /**
-     *  delete by id
-     */
   deleteById(id, callback) {
     if (id !== null && id !== '') {
       ActModel.remove({ _id: id }, (err) => {
