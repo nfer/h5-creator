@@ -22,4 +22,20 @@
             window.location.href=$(this).data('href');
         }
     })
+
+    $('.c-each').hover(function() {
+        if ($(this).data('qrcode-done')) {
+            return;
+        }
+
+        const domain = window.location.origin;
+        const viewpath = $(this).data('viewpath');
+        const qrcodeUrl = `/qrcode?url=${domain}/${viewpath}`;
+
+        const $img = $(this).find('img.mark-img');
+        if ($img) {
+            $img.attr('src', qrcodeUrl);
+            $(this).data('qrcode-done', 'true')
+        }
+    })
 })();

@@ -26,7 +26,7 @@
         <h1 class="c-title">案例展示</h1>
         <div class="content-line">
             {% for item in data %}
-            <section class="c-each" data-href="show-h5.html?src={{item.viewpath}}">
+            <section class="c-each" data-viewpath="{{item.viewpath}}" data-href="show-h5.html?src={{item.viewpath}}">
                 <img src="{{item.cover}}" alt="" class="img">
                 <div class="info">
                     <h1 class="h1">{{item.name}}</h1>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="mark">
-                    <img src="/qrcode?url={{domain}}/{{item.viewpath}}" alt="" class="mark-img">
+                    <img alt="" class="mark-img">
                     <a href="javascript:void(0);" class="view">view</a>
                 </div>
             </section>
