@@ -38,7 +38,9 @@ nunjucks.configure(path.join(__dirname, 'server/views'), {
 });
 
 app.use(session({
-  secret: 'recommand 128 bytes random string', // 建议使用 128 个字符的随机字符串
+  resave: true,
+  saveUninitialized: true,
+  secret: 'recommand 128 bytes random string',
 }));
 
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
