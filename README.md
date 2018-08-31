@@ -88,22 +88,12 @@
 > 为了减少配置工作量，在server/routers/index.js中，自动扫描路由文件，有点杀鸡用牛刀的意思，压根就没几个路由文件
 
 ```
-    // 控制器路由表
-    var actionList = [];
-    files = utils.getAllFiles(process.rootPath + '/server/routers');
-    for (var key in files) {
-        if(files[key].indexOf('index.js') < 0) {
-            actionList.push(files[key].replace(process.rootPath + '/server/routers/', ''));
-        }
-    }
+  const files = fs.readdirSync(__dirname);
+  const actionList = files.filter(item => item !== 'index.js');
 
-    module.exports = (app) => {
-    //循环配置控制器路由表
-    Array.from(actionList, (page) => {
-        require('./' + page)(app);
-        return page;
-    });
-};
+  actionList.forEach((action) => {
+    require(`./${action}`)(app);
+  });
 ```
 
 ### nunjucks模板（views）
