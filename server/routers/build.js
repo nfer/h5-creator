@@ -78,7 +78,7 @@ module.exports = function route(app) {
      *
      */
   app.get('/edit', (req, res) => {
-    const id = req.param('id');
+    const { id } = req.query;
     actDao.findById(id, (data) => {
       if (!data) {
         return res.redirect('/home');
@@ -143,7 +143,7 @@ module.exports = function route(app) {
      *  下载
      */
   app.get('/download', (req, res) => {
-    const id = req.param('id');
+    const { id } = req.query;
     const files = utils.getAllFiles(`${process.rootPath}/output/projects/${id}`);
 
     const outFiles = [];
@@ -167,7 +167,7 @@ module.exports = function route(app) {
      *  根据id删除
      */
   app.get('/delete', (req, res) => {
-    const id = req.param('id');
+    const { id } = req.query;
     actDao.deleteById(id, (data) => {
       if (data.code !== '000000') {
         res.send(parseRes.error(data));
