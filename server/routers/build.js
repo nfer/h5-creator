@@ -7,11 +7,11 @@ const utils = require('../utils/utils.js');
  *  转化为前端可见的图片地址
  */
 function dueDataImage(data) {
-  const [pages] = data;
+  const { pages } = data;
   for (let i = 0; i < pages.length; i += 1) {
     const page = pages[i];
     page.burl = page.burl.replace('../images', '/upload');
-    const [items] = page;
+    const { items } = page;
     for (let j = 0; j < items.length; j += 1) {
       const item = items[j];
       if (item.imgUrl) {
