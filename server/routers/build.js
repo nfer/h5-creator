@@ -80,7 +80,11 @@ module.exports = function route(app) {
   app.get('/edit', (req, res) => {
     const id = req.param('id');
     actDao.findById(id, (data) => {
-      res.render('edit.html', {
+      if (!data) {
+        return res.redirect('/home');
+      }
+
+      return res.render('edit.html', {
         slug: 'edit',
         data: dueDataImage(data),
       });
