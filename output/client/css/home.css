@@ -175,11 +175,10 @@ body{
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    vertical-align: top;
+    cursor: pointer;
 }
 
 .content .new:hover {
-    cursor: pointer;
     border: 2px dashed rgb(221, 221, 221);
 }
 
