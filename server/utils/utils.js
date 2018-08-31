@@ -58,7 +58,6 @@ exports.getDirs = function getDirs(root) {
   return result;
 };
 
-
 /* 创建文件
  * @param root 保存的路径
  * @param content 文件内容
@@ -137,7 +136,6 @@ exports.isExists = function isExists(src, callback) {
   });
 };
 
-
 /*
  * 复制目录中的所有文件包括子目录
  * @param{ String } 需要复制的目录
@@ -153,12 +151,9 @@ exports.copy = function copy(src, dst) {
     paths.forEach((folder) => {
       const _src = `${src}/${folder}`;
 
-
       const _dst = `${dst}/${folder}`;
 
-
       let readable;
-
 
       let writable;
 
@@ -227,7 +222,6 @@ exports.getPostData = function getPostData(req, callback) {
     }
   });
 };
-
 
 /**
  *  create by zengwenfu

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('./config');
 
-
 module.exports = function init() {
   // 创建数据库链接
   mongoose.connect(config.db.conn, { useNewUrlParser: true });

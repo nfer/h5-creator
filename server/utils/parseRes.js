@@ -1,5 +1,4 @@
 
-
 module.exports = {
   success(data) {
     return JSON.stringify({

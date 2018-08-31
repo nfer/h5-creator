@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const ActModel = mongoose.model('Activies');
 
-
 module.exports = {
   /**
      *  保存

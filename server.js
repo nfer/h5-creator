@@ -9,7 +9,6 @@ const connect = require('./server/db/connect');
 let env = process.env.NODE_ENV;
 env = env == null ? 'prd' : env;
 
-
 // 连接数据库
 connect();
 
@@ -23,7 +22,6 @@ const host = {
 };
 
 process.host = host[env];
-
 
 const app = express();
 
@@ -49,9 +47,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'output')));
 
-
 require('./server/routers/index.js')(app);
-
 
 // 创建应用服务器
 const server = http.createServer(app);
