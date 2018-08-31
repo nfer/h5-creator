@@ -22,8 +22,6 @@
     "eslint": "^5.4.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "express-zip": "^2.0.1",
-    "js-beautify": "^1.6.4",
-    "webpack": "^1.13.3"
+    "js-beautify": "^1.6.4"
   }
 }
