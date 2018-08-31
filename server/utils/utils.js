@@ -25,7 +25,7 @@ exports.getAllFiles = function getAllFiles(root, reg) {
 
     if (!stat.isDirectory()) {
       const fitlPath = path.resolve(root, file).replace(/\\/g, '/');
-      if (reg === null || reg.test(fitlPath)) {
+      if (!reg || reg.test(fitlPath)) {
         res.push(fitlPath);
       }
     } else {
