@@ -10,3 +10,4 @@ yarn.lock
 output/projects/
 output/temp/
 output/upload/
+output/client/js/debugging/
