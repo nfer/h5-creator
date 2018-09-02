@@ -1,4 +1,5 @@
-require('./rTab');
+import RTab from './rTab';
+
 require('./ZUpload');
 
 (function IIFE() {
@@ -15,7 +16,7 @@ require('./ZUpload');
   /**
      * 类定义
      */
-  const Index = function () {
+  const Index = function Index() {
     this.init();
   };
 
@@ -26,7 +27,7 @@ require('./ZUpload');
     init() {
       // 定义全局变量
       this.pageController = false; // 页面控制器
-      this.rTab = new RTab(); // 右侧面板控制器
+      this.rTab = new RTab({}, window.pageData, window.pageItemData); // 右侧面板控制器
 
       // 对话框 因为用到rTab的方法所以放在后面
       this.dueDialog();
