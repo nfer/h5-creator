@@ -61,10 +61,10 @@ body{
 .login-wrap .btn {
     color: #fff;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .login-wrap .btn:first-child::after {
-    /*content: '/';*/
     position: relative;
     right: -2px;
     font-size: 20px;
