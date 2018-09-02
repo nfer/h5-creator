@@ -554,7 +554,6 @@ body {
 
 
 /* 创建页面的信息弹窗start */
-
 .page-info-dialog-mask {
     width: 100%;
     height: 100%;
@@ -693,29 +692,29 @@ body {
     left: 50%;
     transform: translate(-50%,-50%);
 }
-.bootstrap-frm .button {
+.bootstrap-frm .bottom-btn-box {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.bootstrap-frm .bottom-btn-box .button {
     background: #FFF;
     border: 1px solid #CCC;
-    margin-right:20px;
     padding: 10px 25px 10px 25px;
     color: #333;
     border-radius: 4px;
 }
-
-.bootstrap-frm .button:hover {
+.bootstrap-frm .bottom-btn-box .button:hover {
     color: #333;
     background-color: #EBEBEB;
     border-color: #ADADAD;
 }
-.bootstrap-frm label.bottom-btn{
-    text-align: center;
-    margin-top:10px;
-}
-.bootstrap-frm label.bottom-btn #sure{
-    margin:0 100px 0 -115px;
+.bootstrap-frm .bottom-btn-box .button#sure{
     background-color: rgb(85, 119, 221);
     color: #fff;
     border: 1px solid rgb(85,119,221);
 }
-
+.bootstrap-frm .bottom-btn-box .button + .button {
+    margin-left: 105px;
+}
 /* 创建页面的信息弹窗end */
