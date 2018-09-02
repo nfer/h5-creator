@@ -34,13 +34,13 @@
                     <div class="author">作者：{{item.author}}</div>
                     <p class="desc">{{item.discript}}</p>
                     <div class="btn-wrap">
-                        <a href="javascript:void(0);" data-href="edit?id={{item._id}}" class="btn edit" title="编辑"></a>
+                        <a href="javascript:void(0);" class="btn edit" title="编辑" data-href="edit?id={{item._id}}"></a>
                         <a href="javascript:void(0);" class="btn delete" title="删除" data-id='{{item._id}}'></a>
                     </div>
                 </div>
                 <div class="mark">
                     <img alt="" class="mark-img">
-                    <a href="javascript:void(0);" class="view">view</a>
+                    <a href="javascript:void(0);" class="view" title="预览">view</a>
                 </div>
             </section>
             {% endfor %}
