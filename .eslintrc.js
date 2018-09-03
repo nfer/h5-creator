@@ -8,7 +8,9 @@ module.exports = {
     // add your custom rules here
     rules: {
       'no-multiple-empty-lines': ["error", { "max": 1, "maxEOF": 0 }],
+      'no-new': 0,
       'no-console': 0,
+      'no-alert': 0,
       'no-param-reassign': 'off',
       'no-underscore-dangle': 'off',
       'no-irregular-whitespace': ["error", { "skipRegExps": true }],

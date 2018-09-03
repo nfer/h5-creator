@@ -1,6 +1,5 @@
 import RTab from './rTab';
-
-require('./ZUpload');
+import ZUpload from './ZUpload';
 
 (function IIFE() {
   /**
@@ -111,7 +110,7 @@ require('./ZUpload');
     },
     dueText() {
       const self = this;
-      new Text({
+      new TextItem({
         pageController: self.pageController,
         rTab: self.rTab,
       });
@@ -139,8 +138,8 @@ require('./ZUpload');
 
         $.post('/build', {
           config: JSON.stringify(data),
-        }, (data) => {
-          const obj = JSON.parse(data);
+        }, (res) => {
+          const obj = JSON.parse(res);
 
           const pages = $('.simulator-box').length;
 
@@ -179,8 +178,8 @@ require('./ZUpload');
 
       $.post('/save', {
         config: JSON.stringify(data),
-      }, (data) => {
-        const obj = JSON.parse(data);
+      }, (res) => {
+        const obj = JSON.parse(res);
         if (obj.code !== '000000') {
           alert(obj.msg);
         } else {
@@ -248,13 +247,13 @@ require('./ZUpload');
       // 点击取消按钮
       $('#cancel').bind('click', () => {
         if (!settingData.name || !settingData.author) {
-          location.href = 'home';
+          window.location.href = 'home';
         } else {
           $('#pageInfoDialog').hide();
         }
       });
 
-      $('.icon-handler').each(function (index) {
+      $('.icon-handler').each(function onEach(index) {
         $(this).bind('click', () => {
           if (index === 7) {
             $('.icon-stage').css({
@@ -299,11 +298,11 @@ require('./ZUpload');
     },
     // 头部设置按钮点击切换
     changeTab() {
-      new changeTabs();
+      new ChangeTabs();
     },
     // 下载
     download() {
-      location.href = `/download?id=${settingData.id}`;
+      window.location.href = `/download?id=${settingData.id}`;
     },
 
   };

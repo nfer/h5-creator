@@ -11,7 +11,7 @@
     /**
      *  定义类
      */
-    var Text = function(options) {
+    var TextItem = function(options) {
         this.options = $.extend({}, defaultOpts, options);
         this.init();
     };
@@ -19,7 +19,7 @@
     /**
      *  定义原型方法
      */
-    Text.prototype = {
+    TextItem.prototype = {
         init: function() {
 
             this.index = 0;
@@ -196,6 +196,6 @@
         
     }
 
-    window.Text = Text;
+    window.TextItem = TextItem;
 
 })(jQuery);

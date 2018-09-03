@@ -20,5 +20,5 @@
             })
         }
     }
-    window.changeTabs=ChangeTabs;
+    window.ChangeTabs=ChangeTabs;
 })();
