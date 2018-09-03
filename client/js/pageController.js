@@ -398,9 +398,8 @@ PageController.prototype = {
 
       // 删除
       current.remove();
+      $(`#${pageId}-stage`).remove();
       self.options.rTab.removePageData(pageId);
-      const stageId = `${pageId}-stage`;
-      $(`#${stageId}`).remove();
     });
   },
   /**
