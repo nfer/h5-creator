@@ -330,4 +330,4 @@ RTab.prototype = {
   },
 };
 
-module.exports = RTab;
+export default RTab;

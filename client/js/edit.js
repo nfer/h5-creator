@@ -1,5 +1,7 @@
 import RTab from './rTab';
 import ZUpload from './ZUpload';
+import ImageItem from './imageItem';
+import TextItem from './textItem';
 
 (function IIFE() {
   /**

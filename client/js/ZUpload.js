@@ -140,4 +140,4 @@ ZUpload.prototype = {
   },
 };
 
-module.exports = ZUpload;
+export default ZUpload;
