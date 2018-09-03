@@ -374,13 +374,15 @@ PageController.prototype = {
     const self = this;
     $('#pageContainer').on('click', '.delete', function onClick(e) {
       e.stopPropagation();
+
       const pageId = $(this).attr('data-page');
       const current = $(`#${pageId}`);
+
       // 是不是已经只是唯一的一页了
-      const el = (current.next().length > 0 && current.next())
-                 || (current.prev().length > 0 && current.prev());
+      const el = (current.next('.page-wrap').length > 0 && current.next('.page-wrap'))
+                 || (current.prev('.page-wrap').length > 0 && current.prev('.page-wrap'));
       if (!el) {
-        console.log('就剩一页了，不能再删了，骚年！！');
+        window.confirm('就剩一页了，不能再删了，骚年！！');
         return;
       }
 
