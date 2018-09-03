@@ -2,6 +2,8 @@ import RTab from './rTab';
 import ZUpload from './ZUpload';
 import ImageItem from './imageItem';
 import TextItem from './textItem';
+import ChangeTabs from './changeTab';
+import PageController from './pageController';
 
 (function IIFE() {
   /**
