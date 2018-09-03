@@ -6,9 +6,6 @@ const http = require('http');
 const session = require('express-session');
 const connect = require('./server/db/connect');
 
-let env = process.env.NODE_ENV;
-env = env == null ? 'prd' : env;
-
 // 连接数据库
 connect();
 
