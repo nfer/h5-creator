@@ -11,9 +11,6 @@ module.exports = {
     return JSON.stringify({
       code,
       msg,
-      data: {
-
-      },
     });
   },
 };
