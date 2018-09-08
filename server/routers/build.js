@@ -73,6 +73,20 @@ module.exports = function route(app) {
   });
 
   /**
+     * 查询列表
+     */
+  app.get('/cgi/findProject', (req, res) => {
+    const { id } = req.query;
+    actDao.findById(id, (data) => {
+      if (!data) {
+        return res.send(parseRes.error(-1, 'not found'));
+      }
+
+      return res.send(parseRes.success(dueDataImage(data)));
+    });
+  });
+
+  /**
      *
      * 根据id编辑
      *
@@ -93,7 +107,7 @@ module.exports = function route(app) {
   /**
      * 查询列表
      */
-  app.get('/findList', (req, res) => {
+  app.get('/cgi/findList', (req, res) => {
     actDao.findList((data) => {
       res.send(parseRes.success({
         editUrl: '/edit',
